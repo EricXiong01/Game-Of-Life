@@ -23,35 +23,58 @@ public class matrix {
         this.width = width;
         this.height = height;
         matrix = new int[width][height]; // all 0 matrix
-        initialize();
     }
 
-    private void initialize() {
-        for (int[] row : matrix) {
-            for (int element : row) {
-                System.out.println(element);
+    //MODIFIES: matrix
+    //EFFECTS: generate the next matrix
+    public void generateNext() {
+        int[][] newMatrix = new int[width][height];
+        survivedCell(newMatrix, 1, 2, 3);
+        regeneratedCell(newMatrix, 1, 3, 3);
+        //dead cells are automatically 0 at this point
+        matrix = newMatrix;
+    }
+
+    //MODIFIES: newMatrix
+    //EFFECTS: every cell has such adjacency requirement is plotted in the new matrix
+    private void regeneratedCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
+        detectCells(newMatrix, detectRange, lowerBound, upperBound, true);
+    }
+
+    //MODIFIES: newMatrix
+    //EFFECTS: every cell that has adjacent number of cells within a certain range is plotted in the new matrix
+    private void survivedCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
+        detectCells(newMatrix, detectRange, lowerBound, upperBound, false);
+    }
+
+    private void detectCells(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, boolean alwaysEnable) {
+        for (int ri = 0; ri < matrix.length; ri++) {
+            for (int i = 0; i < matrix[ri].length; i++) {
+                if (matrix[ri][i] == 1 || alwaysEnable == true) {
+                    detectSingleCell(newMatrix, detectRange, lowerBound, upperBound, ri, i);
+                }
             }
         }
     }
 
-    public void generateNext() {
-        int[][] newMatrix = new int[width][height];
-        survivedCell(newMatrix);
-        deadCell(newMatrix);
-        regeneratedCell(newMatrix);
-        matrix = newMatrix;
+    private void detectSingleCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, int ri, int i) {
+        int counter = 0;
+        int upperCorner = ri - detectRange;
+        int leftCorner = i - detectRange;
+
+        for (int riCounter = 0; riCounter < detectRange * 2 + 1; riCounter++) {
+            for (int iCounter = 0; iCounter < detectRange * 2 + 1; iCounter++) {
+                int curRow = upperCorner + riCounter;
+                int curElement = leftCorner + iCounter;
+                if (curRow >= 0 && curElement >= 0 && curRow < matrix.length && curElement < matrix[riCounter].length) {
+                    if (matrix[curRow][curElement] == 1) {
+                        counter++;
+                    }
+                }
+            }
+        }
+        if (counter >= lowerBound && counter <= upperBound) {
+            newMatrix[ri][i] = 1;
+        }
     }
-
-    private void regeneratedCell(int[][] newMatrix) {
-
-    }
-
-    private void deadCell(int[][] newMatrix) {
-
-    }
-
-    private void survivedCell(int[][] newMatrix) {
-
-    }
-
 }
