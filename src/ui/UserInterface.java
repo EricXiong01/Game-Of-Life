@@ -80,7 +80,7 @@ public class UserInterface extends JFrame implements ActionListener {
     @Override
     //EFFECTS: display the welcome screen
     public void paint(Graphics g) {
-        g.drawString("This is the Game Of Life, a Turing complete game that can simulate any", 50, 100);
+        g.drawString("This is the Game Of Life, a Turing complete game which can simulate any", 50, 100);
         g.drawString("Turing machine.", 50, 120);
         g.drawString("There are three rules:", 50, 140);
         g.drawString("1. Any live cell with two or three live neighbours survives.", 70, 160);
