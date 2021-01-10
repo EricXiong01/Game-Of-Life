@@ -22,17 +22,29 @@ public class matrix {
     public matrix(int width, int height) {
         this.width = width;
         this.height = height;
-        matrix = new int[width][height]; // all 0 matrix
+        matrix = new int[height][width]; // all 0 matrix
     }
 
     //MODIFIES: matrix
     //EFFECTS: generate the next matrix
     public void generateNext() {
-        int[][] newMatrix = new int[width][height];
+        int[][] newMatrix = new int[height][width];
         survivedCell(newMatrix, 1, 2, 3);
         regeneratedCell(newMatrix, 1, 3, 3);
         //dead cells are automatically 0 at this point
         matrix = newMatrix;
+    }
+
+    public int getElement(int positionX, int positionY) {
+        return matrix[positionY][positionX];
+    }
+
+    public void changeElement(int positionX, int positionY) {
+        if (matrix[positionY][positionX] == 0) {
+            matrix[positionY][positionX] = 1;
+        } else {
+            matrix[positionY][positionX] = 0;
+        }
     }
 
     //MODIFIES: newMatrix

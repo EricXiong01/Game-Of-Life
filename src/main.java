@@ -1,7 +1,7 @@
-import model.core.matrix;
+import ui.UserInterface;
 
 public class main {
     public static void main(String[] args) {
-        new matrix(2,2);
+        new UserInterface();
     }
 }
