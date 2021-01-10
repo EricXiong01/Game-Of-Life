@@ -14,12 +14,12 @@ The initial pattern constitutes the seed of the system. The first generation is 
  */
 package model.core;
 
-public class matrix {
+public class Matrix {
     private int width;
     private int height;
-    private int matrix[][];
+    private int[][] matrix;
 
-    public matrix(int width, int height) {
+    public Matrix(int width, int height) {
         this.width = width;
         this.height = height;
         matrix = new int[height][width]; // all 0 matrix
@@ -29,6 +29,7 @@ public class matrix {
     //EFFECTS: generate the next matrix
     public void generateNext() {
         int[][] newMatrix = new int[height][width];
+        //the following magic numbers are for the original game of life. Can be implemented to make other rules.
         survivedCell(newMatrix, 1, 2, 3);
         regeneratedCell(newMatrix, 1, 3, 3);
         //dead cells are automatically 0 at this point
@@ -50,19 +51,23 @@ public class matrix {
     //MODIFIES: newMatrix
     //EFFECTS: every cell has such adjacency requirement is plotted in the new matrix
     private void regeneratedCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
-        detectCells(newMatrix, detectRange, lowerBound, upperBound, true);
+        detectCells(newMatrix, detectRange, lowerBound, upperBound, false);
     }
 
     //MODIFIES: newMatrix
     //EFFECTS: every cell that has adjacent number of cells within a certain range is plotted in the new matrix
     private void survivedCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
-        detectCells(newMatrix, detectRange, lowerBound, upperBound, false);
+        detectCells(newMatrix, detectRange, lowerBound, upperBound, true);
     }
 
-    private void detectCells(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, boolean alwaysEnable) {
+    private void detectCells(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, boolean checkSurvival) {
         for (int ri = 0; ri < matrix.length; ri++) {
             for (int i = 0; i < matrix[ri].length; i++) {
-                if (matrix[ri][i] == 1 || alwaysEnable == true) {
+                if (checkSurvival) {
+                    if (matrix[ri][i] == 1) {
+                        detectSingleCell(newMatrix, detectRange, lowerBound + 1, upperBound + 1, ri, i);
+                    }
+                } else {
                     detectSingleCell(newMatrix, detectRange, lowerBound, upperBound, ri, i);
                 }
             }
