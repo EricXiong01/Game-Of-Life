@@ -18,29 +18,36 @@ public class Matrix {
     private int width;
     private int height;
     private int[][] matrix;
+    private int[][] previousMatrix;
 
+    //EFFECTS: construct matrix and previousMatrix as all 0 matrices
     public Matrix(int width, int height) {
         this.width = width;
         this.height = height;
-        matrix = new int[height][width]; // all 0 matrix
+        matrix = new int[height][width];
+        previousMatrix = new int[height][width];
     }
 
-    //MODIFIES: matrix
-    //EFFECTS: generate the next matrix
+    //MODIFIES: this
+    //EFFECTS: generate the next matrix and the previousMatrix
     public void generateNext() {
         int[][] newMatrix = new int[height][width];
         //the following magic numbers are for the original game of life. Can be implemented to make other rules.
         survivedCell(newMatrix, 1, 2, 3);
         regeneratedCell(newMatrix, 1, 3, 3);
         //dead cells are automatically 0 at this point
+        previousMatrix = matrix;
         matrix = newMatrix;
     }
 
-    public int getElement(int positionX, int positionY) {
+    //EFFECTS: get the element at given position, 0 position is at the upper-left corner
+    public int getElement(int positionY, int positionX) {
         return matrix[positionY][positionX];
     }
 
-    public void changeElement(int positionX, int positionY) {
+    //MODIFIES: this
+    //EFFECTS: change the element at given position (from 0 to 1, and vice versa), 0 position is at the upper-left corner
+    public void changeElement(int positionY, int positionX) {
         if (matrix[positionY][positionX] == 0) {
             matrix[positionY][positionX] = 1;
         } else {
@@ -60,6 +67,8 @@ public class Matrix {
         detectCells(newMatrix, detectRange, lowerBound, upperBound, true);
     }
 
+    //MODIFIES: newMatrix
+    //EFFECTS: going through all cells and update the cell accordingly to newMatrix
     private void detectCells(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, boolean checkSurvival) {
         for (int ri = 0; ri < matrix.length; ri++) {
             for (int i = 0; i < matrix[ri].length; i++) {
@@ -74,6 +83,8 @@ public class Matrix {
         }
     }
 
+    //MODIFIES: newMatrix
+    //EFFECTS: look at a single cell and determine its state in the next round in newMatrix
     private void detectSingleCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, int ri, int i) {
         int counter = 0;
         int upperCorner = ri - detectRange;
@@ -93,5 +104,16 @@ public class Matrix {
         if (counter >= lowerBound && counter <= upperBound) {
             newMatrix[ri][i] = 1;
         }
+    }
+
+    //EFFECTS: subtract and return matrix by previousMatrix
+    public int[][] difference() {
+        int[][] differenceMatrix = new int[height][width];
+        for (int ri = 0; ri < matrix.length; ri++) {
+            for (int i = 0; i < matrix[ri].length; i++) {
+                differenceMatrix[ri][i] = matrix[ri][i] - previousMatrix[ri][i];
+            }
+        }
+        return differenceMatrix;
     }
 }
