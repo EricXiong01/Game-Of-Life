@@ -23,6 +23,7 @@ public class UserInterface extends JFrame implements ActionListener {
     private JButton saveBtn;
     private JButton clearBtn;
     private Timer timer;
+    private Boolean enableDraw;
 
     //EFFECTS: construct the panel and initialize the UI
     public UserInterface() {
@@ -32,6 +33,7 @@ public class UserInterface extends JFrame implements ActionListener {
         sizeOfCell = 16;
         upperCorner = 95;
         leftCorner = 20;
+        enableDraw = false;
         setMatrix();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(570, 600));
@@ -78,7 +80,19 @@ public class UserInterface extends JFrame implements ActionListener {
     @Override
     //EFFECTS: display the welcome screen
     public void paint(Graphics g) {
-        g.drawString("Hello", 100, 100);
+        g.drawString("This is the Game Of Life, a Turing complete game that can simulate any", 50, 100);
+                g.drawString("Turing machine.", 50, 120);
+        g.drawString("There are three rules:", 50, 140);
+        g.drawString("1. Any live cell with two or three live neighbours survives.", 70, 160);
+        g.drawString("2. Any dead cell with three live neighbours becomes a live cell.", 70, 180);
+        g.drawString("3. All other live cells die in the next generation.", 70, 200);
+        g.drawString("   Similarly, all other dead cells stay dead.", 70, 220);
+        g.drawString("Filled blocks represent live cells while empty blocks represent dead cells.", 50, 250);
+        g.drawString("Clicking or dragging on the cell change the cell to the other type.", 50, 270);
+        g.drawString("Press \"Next\" to enter the next generation.", 50, 290);
+        g.drawString("Press \"Start\" to automatically update the generation.", 50, 310);
+        g.drawString("Press \"Clear\" to clear everything.", 50, 330);
+        g.drawString("Now, press \"Next\" to begin", 200, 450);
     }
 
     @Override
@@ -91,6 +105,7 @@ public class UserInterface extends JFrame implements ActionListener {
         if (e.getActionCommand().equals("apply")) { //update to the next screen
             matrix.generateNext();
             updateWholeGraph();
+            enableDraw = true;
         }
         if (e.getActionCommand().equals("clear")) { //clear the screen
             setMatrix();
@@ -181,14 +196,18 @@ public class UserInterface extends JFrame implements ActionListener {
         //MODIFIES: this
         //EFFECTS: change the matrix (0 to 1, and vice versa) and update the screen at given point
         private void handleMousePressed(Point point) {
-            int ri = ((point.y - upperCorner) / sizeOfCell);
-            int i = ((point.x - leftCorner) / sizeOfCell);
-            matrix.changeElement(ri, i);
-            if (matrix.getElement(ri, i) == 1) {
-                getGraphics().fillRect(leftCorner + sizeOfCell * i, upperCorner + sizeOfCell * ri, sizeOfCell, sizeOfCell);
-            } else {
-                getGraphics().clearRect(leftCorner + sizeOfCell * i, upperCorner + sizeOfCell * ri, sizeOfCell, sizeOfCell);
-                getGraphics().drawRect(leftCorner + sizeOfCell * i, upperCorner + sizeOfCell * ri, sizeOfCell, sizeOfCell);
+            if (enableDraw) {
+                int ri = ((point.y - upperCorner) / sizeOfCell);
+                int i = ((point.x - leftCorner) / sizeOfCell);
+                if (0 <= ri && 0 <= i && ri < height && i < width) {
+                    matrix.changeElement(ri, i);
+                    if (matrix.getElement(ri, i) == 1) {
+                        getGraphics().fillRect(leftCorner + sizeOfCell * i, upperCorner + sizeOfCell * ri, sizeOfCell, sizeOfCell);
+                    } else {
+                        getGraphics().clearRect(leftCorner + sizeOfCell * i, upperCorner + sizeOfCell * ri, sizeOfCell, sizeOfCell);
+                        getGraphics().drawRect(leftCorner + sizeOfCell * i, upperCorner + sizeOfCell * ri, sizeOfCell, sizeOfCell);
+                    }
+                }
             }
         }
     }
