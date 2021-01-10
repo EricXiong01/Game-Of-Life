@@ -75,6 +75,7 @@ public class UserInterface extends JFrame implements ActionListener {
         add(clearBtn);
     }
 
+    @Override
     //EFFECTS: display the welcome screen
     public void paint(Graphics g) {
         g.drawString("Hello", 100, 100);
