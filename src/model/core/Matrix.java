@@ -15,23 +15,23 @@ The initial pattern constitutes the seed of the system. The first generation is 
 package model.core;
 
 public class Matrix {
-    private int width;
-    private int height;
-    private int[][] matrix;
-    private int[][] previousMatrix;
+    private short width;
+    private short height;
+    private short[][] matrix;
+    private short[][] previousMatrix;
 
     //EFFECTS: construct matrix and previousMatrix as all 0 matrices
-    public Matrix(int width, int height) {
+    public Matrix(short width, short height) {
         this.width = width;
         this.height = height;
-        matrix = new int[height][width];
-        previousMatrix = new int[height][width];
+        matrix = new short[height][width];
+        previousMatrix = new short[height][width];
     }
 
     //MODIFIES: this
     //EFFECTS: generate the next matrix and the previousMatrix
     public void generateNext() {
-        int[][] newMatrix = new int[height][width];
+        short[][] newMatrix = new short[height][width];
         //the following magic numbers are for the original game of life. Can be implemented to make other rules.
         survivedCell(newMatrix, 1, 2, 3);
         regeneratedCell(newMatrix, 1, 3, 3);
@@ -57,19 +57,19 @@ public class Matrix {
 
     //MODIFIES: newMatrix
     //EFFECTS: every cell has such adjacency requirement is plotted in the new matrix
-    private void regeneratedCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
+    private void regeneratedCell(short[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
         detectCells(newMatrix, detectRange, lowerBound, upperBound, false);
     }
 
     //MODIFIES: newMatrix
     //EFFECTS: every cell that has adjacent number of cells within a certain range is plotted in the new matrix
-    private void survivedCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
+    private void survivedCell(short[][] newMatrix, int detectRange, int lowerBound, int upperBound) {
         detectCells(newMatrix, detectRange, lowerBound, upperBound, true);
     }
 
     //MODIFIES: newMatrix
     //EFFECTS: going through all cells and update the cell accordingly to newMatrix
-    private void detectCells(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, boolean checkSurvival) {
+    private void detectCells(short[][] newMatrix, int detectRange, int lowerBound, int upperBound, boolean checkSurvival) {
         for (int ri = 0; ri < matrix.length; ri++) {
             for (int i = 0; i < matrix[ri].length; i++) {
                 if (checkSurvival) {
@@ -85,7 +85,7 @@ public class Matrix {
 
     //MODIFIES: newMatrix
     //EFFECTS: look at a single cell and determine its state in the next round in newMatrix
-    private void detectSingleCell(int[][] newMatrix, int detectRange, int lowerBound, int upperBound, int ri, int i) {
+    private void detectSingleCell(short[][] newMatrix, int detectRange, int lowerBound, int upperBound, int ri, int i) {
         int counter = 0;
         int upperCorner = ri - detectRange;
         int leftCorner = i - detectRange;

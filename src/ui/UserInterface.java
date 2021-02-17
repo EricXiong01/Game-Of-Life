@@ -14,8 +14,8 @@ import java.util.TimerTask;
 
 public class UserInterface extends JFrame implements ActionListener {
     private Matrix matrix;
-    private int height;
-    private int width;
+    private short height;
+    private short width;
     private int sizeOfCell;
     private int upperCorner;
     private int leftCorner;
